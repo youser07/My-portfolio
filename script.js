@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
- // Form submission handler
+// Form submission handler
 if (contactForm) {
     contactForm.addEventListener('submit', function (e) {
         e.preventDefault(); // Prevents page refresh
@@ -66,6 +66,16 @@ if (contactForm) {
         submitBtn.innerHTML = ''; // Remove text
         submitBtn.appendChild(loader); // Show animated loader
 
+        // **Loop animation until form is sent**
+        const postcard = loader.querySelector('.postcard');
+        const sendingText = loader.querySelector('.sending-text');
+
+        function loopAnimation() {
+            postcard.style.animation = "dropPostcardSmooth 2s ease-in-out infinite";
+            sendingText.style.animation = "fadeInOut 2s ease-in-out infinite";
+        }
+        loopAnimation(); // Start looping
+
         // Send form data
         const formData = new FormData(contactForm);
         fetch(contactForm.action, {
@@ -82,7 +92,10 @@ if (contactForm) {
             console.error("Form submission error:", error);
             alert("Network error. Please try again later.");
         }).finally(() => {
-            // Restore button after submission
+            // **Stop animation & restore button**
+            postcard.style.animation = "none";
+            sendingText.style.animation = "none";
+
             submitBtn.innerHTML = 'Send Message';
             submitBtn.disabled = false;
         });
@@ -95,6 +108,7 @@ if (sendAnother) {
         formSuccess.classList.remove('active');
     });
 }
+
 
 
     // Add smooth scrolling for all anchor links
